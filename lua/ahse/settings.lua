@@ -1,4 +1,4 @@
-function getHomeDir()
+local function getHomeDir()
     local ENV_HOME = os.getenv("HOME");
 
     -- Linux and MacOS
@@ -6,18 +6,17 @@ function getHomeDir()
         return ENV_HOME
     end
 
-	local ENV_HOMEDRIVE = os.getenv("HOMEDRIVE");
+    local ENV_HOMEDRIVE = os.getenv("HOMEDRIVE");
     local ENV_HOMEPATH = os.getenv("HOMEPATH");
 
     -- Windows
-    if type(ENV_HOMEDRIVE) == "string" and type(ENV_HOMEPATH) == "string" then 
-        return string.gsub(ENV_HOMEDRIVE..ENV_HOMEPATH,"\\", "/")
+    if type(ENV_HOMEDRIVE) == "string" and type(ENV_HOMEPATH) == "string" then
+        return string.gsub(ENV_HOMEDRIVE .. ENV_HOMEPATH, "\\", "/")
     end
 
 
     return nil
 end
-
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -38,5 +37,11 @@ vim.opt.undofile = true
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 vim.opt.scrolloff = 8
+
+vim.opt.termguicolors = true
+
+vim.opt.whichwrap:append("<,>,h,l,[,]")

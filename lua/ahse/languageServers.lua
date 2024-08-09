@@ -4,21 +4,23 @@ local mason_lspc = require('mason-lspconfig');
 local cmp = require('cmp');
 
 lsp_zero.on_attach(function(client, bufnr)
-    lsp_zero.default_keymaps({buffer = bufnr}) 
+    lsp_zero.default_keymaps({ buffer = bufnr })
 end)
 
 vim.diagnostic.config({
-  update_in_insert = true
+    update_in_insert = true
 })
 
 mason.setup()
 mason_lspc.setup({
-    ensure_installed = {},
+    ensure_installed = {
+        "rust_analyzer",
+        "gopls",
+        "lua_ls",
+        "zls",
+        "tsserver",
+    },
     handlers = {
-        function(server_name)
-            require('lspconfig')[server_name].setup()
-        end,
-
         rust_analyzer = function()
             require('lspconfig').rust_analyzer.setup({})
         end,
@@ -28,15 +30,27 @@ mason_lspc.setup({
         end,
 
         lua_ls = function()
-            require('lspconfig').lua_ls.setup({ })
+            require('lspconfig').lua_ls.setup({
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { "vim" },
+                        },
+                    },
+                },
+            })
         end,
 
+        --stylua = function()
+        --    require("lspconfig").stylua.setup({ })
+        --end,
+
         zls = function()
-            require('lspconfig').zls.setup({ })
+            require('lspconfig').zls.setup({})
         end,
 
         tsserver = function()
-            require('lspconfig').tsserver.setup({ });
+            require('lspconfig').tsserver.setup({});
         end,
     }
 })
@@ -50,3 +64,13 @@ cmp.setup({
     },
 })
 
+lsp_zero.format_on_save({
+    format_opts = {
+        async = false,
+        timeout_ms = 10000,
+    },
+
+    servers = {
+        ["lua_ls"] = { "lua" },
+    }
+});
